@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "domain": "http://www.tplh.net",
+    "website_name": "learn-pjax",
+    "keywords": "pjax"
+  },
+  "pages": {
+    "index": {
+      "title": "",
+      "keywords": "",
+      "description": "",
+      "path": "/",
+      "ogp_description": "",
+      "ogp_img": "ogp.jpg"
+    }
+  }
+}
