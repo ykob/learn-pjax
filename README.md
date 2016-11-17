@@ -1,10 +1,5 @@
 # learn-pjax
 
-learning jquery-pjax and more.
+it's test of web page navigation made with $.ajax and pushstate.
 
 https://ykob.github.io/learn-pjax/
-
-## plugins and api
-
-- [jquery-pjax](https://github.com/defunkt/jquery-pjax)
-- [vue](https://github.com/vuejs/vue)
