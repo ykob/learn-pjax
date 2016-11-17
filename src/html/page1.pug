@@ -1,0 +1,10 @@
+extends ./layout/_page.pug
+
+block vars
+  -
+    var page = pages.page1;
+
+block content
+  p #{page.description}
+  picture
+    img(src="https://c1.staticflickr.com/1/737/21602368481_bb97a8ec68_b.jpg", alt="")
