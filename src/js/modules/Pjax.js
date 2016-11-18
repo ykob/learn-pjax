@@ -3,33 +3,34 @@ export default class Pjax {
     this.classNameLink = 'a.js-pjax';
     this.classNameWrap = '.l-contents';
     this.$wrap = $(this.classNameWrap);
-    this.htmlLoaded = null;
+    this.$head = null;
+    this.$body = null;
     this.$contentsLoaded = null;
+    this.$meta = {
+      desc: $('meta[name="description"]'),
+      keys: $('meta[name="keywords"]'),
+      ogTitle: $('meta[property="og:title"]'),
+      ogDesc: $('meta[property="og:description"]'),
+      ogUrl: $('meta[property="og:url"]'),
+      twTitle: $('meta[name="witter:title"]'),
+      twDesc: $('meta[name="twitter:description"]'),
+    }
     this.$overlay = $('.l-pjax-overlay');
 
     this.init();
   }
   init() {
     const _this = this;
-    history.replaceState('init', null, location.pathname);
     $(this.classNameLink).on('click.pjax', function(event) {
       _this.click(event, $(this))
     })
     $(window).on('popstate.pjax', function(event) {
-      switch (event.originalEvent.state) {
-        case 'movePage':
-          _this.close(() => {
-            _this.load(location.pathname);
-          });
-          break;
-        case 'init':
-          _this.close(() => {
-            _this.load(location.pathname);
-          });
-          break;
-        default:
-      }
+      if (event.originalEvent.state != 'movePage') return;
+      _this.close(() => {
+        _this.load(location.pathname);
+      });
     });
+    history.replaceState('movePage', null, location.pathname);
   }
   load(href) {
     $.ajax({
@@ -60,14 +61,24 @@ export default class Pjax {
   }
   success(data) {
     const _this = this;
-    this.htmlLoaded = null;
+    this.$head = null;
+    this.$body = null;
     this.$contentsLoaded = null;
-    this.htmlLoaded = $.parseHTML(data);
-    this.$contentsLoaded = $('<div/>').append(this.htmlLoaded).find(this.classNameWrap);
+    this.$head = $($.parseHTML(data.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0]));
+    this.$body = $($.parseHTML(data.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
+    this.$contentsLoaded = this.$body.find(this.classNameWrap);
     this.$wrap.empty();
     this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
       _this.click(event, $(this))
     });
+    document.title = this.$head.filter('title').last().text();
+    this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
+    this.$meta.keys.attr('content', this.$head.filter('meta[name=keywords]')[0].content);
+    this.$meta.ogTitle.attr('content', document.title);
+    this.$meta.ogDesc.attr('content', this.$meta.desc.attr('content'));
+    this.$meta.ogUrl.attr('content', location.hostname + location.pathname);
+    this.$meta.twTitle.attr('content', document.title);
+    this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
     this.$wrap.html(this.$contentsLoaded);
     this.open();
   }
