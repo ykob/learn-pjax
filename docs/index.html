@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>learn-pjax</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta name="description" content="it's test of web page navigation made with $.ajax and pushstate.">
+    <meta name="keywords" content="index, pjax">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/common/ms_tileimage.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <link rel="shortcut icon" href="/img/common/icon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/common/app-icon.png">
+    <link rel="stylesheet" href="/css/main.min.css">
+    <meta property="og:title" content="learn-pjax">
+    <meta property="og:site_name" content="learn-pjax">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="it's test of web page navigation made with $.ajax and pushstate.">
+    <meta property="og:url" content="https://ykob.github.io/learn-pjax/">
+    <meta property="og:image" content="https://ykob.github.io/learn-pjax/img/image00.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="learn-pjax">
+    <meta name="twitter:description" content="it's test of web page navigation made with $.ajax and pushstate.">
+    <meta name="twitter:image" content="https://ykob.github.io/learn-pjax/img/image00.jpg">
+  </head>
+  <body>
+    <div class="l-page">
+      <div class="l-gh">
+        <div class="l-gh__site-title"><a class="js-pjax" href="/">Learn Pjax</a></div>
+        <div class="l-gh__site-summary">it's test of web page navigation made with $.ajax and pushstate.</div>
+        <ul class="l-gh__navi">
+          <li class="l-gh__navi-item"><a class="js-pjax" href="/page1.html">Page1</a></li>
+          <li class="l-gh__navi-item"><a class="js-pjax" href="/page2.html">Page2</a></li>
+          <li class="l-gh__navi-item"><a class="js-pjax" href="/page3.html">Page3</a></li>
+        </ul>
+      </div>
+      <div class="l-contents">
+        <picture><img src="/img/image00.jpg" srcset="/img/image00.jpg" alt=""></picture>
+        <ul>
+          <li><a class="js-pjax" href="/page1.html">Ordinary link transition to page1.</a></li>
+          <li><a href="https://github.com/ykob/learn-pjax">Ordinary link not have classname for pjax.</a></li>
+        </ul>
+      </div>
+      <div class="l-gf">
+        <div class="l-gf__view-source"><a href="https://github.com/ykob/learn-pjax">view source</a></div>
+      </div>
+    </div>
+    <div class="l-pjax-overlay"></div>
+    <script src="/js/vendor.min.js"></script>
+    <script src="/js/main.min.js"></script>
+  </body>
+</html>
