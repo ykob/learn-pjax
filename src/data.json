@@ -1,6 +1,6 @@
 {
   "meta": {
-    "domain": "https://ykob.github.io/learn-pjax/",
+    "domain": "https://ykob.github.io/learn-pjax",
     "website_name": "learn-pjax",
     "keywords": "pjax"
   },
@@ -11,7 +11,7 @@
       "description": "it's test of web page navigation made with $.ajax and pushstate.",
       "path": "/",
       "ogp_description": "it's test of web page navigation made with $.ajax and pushstate.",
-      "ogp_img": "ogp.jpg"
+      "ogp_img": "image00.jpg"
     },
     "page1": {
       "title": "Page1",
@@ -19,7 +19,7 @@
       "description": "here is dummy text about page1.",
       "path": "/page1.html",
       "ogp_description": "here is dummy text about page1.",
-      "ogp_img": "ogp.jpg"
+      "ogp_img": "image00.jpg"
     },
     "page2": {
       "title": "Page2",
@@ -27,7 +27,7 @@
       "description": "here is dummy text about page2.",
       "path": "/page2.html",
       "ogp_description": "here is dummy text about page2.",
-      "ogp_img": "ogp.jpg"
+      "ogp_img": "image00.jpg"
     },
     "page3": {
       "title": "Page3",
@@ -35,7 +35,7 @@
       "description": "here is dummy text about page3.",
       "path": "/page3.html",
       "ogp_description": "here is dummy text about page3.",
-      "ogp_img": "ogp.jpg"
+      "ogp_img": "image00.jpg"
     }
   }
 }
