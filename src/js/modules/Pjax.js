@@ -16,12 +16,16 @@ export default class Pjax {
       _this.click(event, $(this))
     })
     $(window).on('popstate.pjax', function(event) {
-      switch (event.state) {
+      switch (event.originalEvent.state) {
         case 'movePage':
-          _this.load(location.pathname);
+          _this.close(() => {
+            _this.load(location.pathname);
+          });
           break;
         case 'init':
-          _this.load(location.pathname);
+          _this.close(() => {
+            _this.load(location.pathname);
+          });
           break;
         default:
       }
@@ -49,7 +53,10 @@ export default class Pjax {
     event.preventDefault();
     const href = $this.attr('href');
     if (href == location.pathname) return;
-    this.close(href);
+    this.close(() => {
+      this.load(href);
+      history.pushState('movePage', null, href);
+    });
   }
   success(data) {
     const _this = this;
@@ -64,12 +71,11 @@ export default class Pjax {
     this.$wrap.html(this.$contentsLoaded);
     this.open();
   }
-  close(href) {
+  close(callback) {
     this.$overlay.addClass('is-spread');
     this.$overlay.on('animationend.pjaxSpread', () => {
-      this.load(href);
-      history.pushState('movePage', null, href);
       this.$overlay.off('animationend.pjaxSpread');
+      callback();
     })
   }
   open() {
