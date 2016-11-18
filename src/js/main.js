@@ -8,4 +8,4 @@ import Pjax from './modules/Pjax.js'
 
 // const { pathname } = window.location;
 
-const pjax = new Pjax('a.js-pjax', '.l-contents');
+const pjax = new Pjax();

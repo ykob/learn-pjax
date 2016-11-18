@@ -1,27 +1,33 @@
 export default class Pjax {
-  constructor(classNameLink, classNameContents) {
-    this.classNameLink = classNameLink;
-    this.classNameContents = classNameContents;
-    this.$contents = $(classNameContents);
+  constructor() {
+    this.classNameLink = 'a.js-pjax';
+    this.classNameWrap = '.l-contents';
+    this.$wrap = $(this.classNameWrap);
     this.htmlLoaded = null;
     this.$contentsLoaded = null;
+    this.$overlay = $('.l-pjax-overlay');
 
     this.init();
   }
   init() {
     const _this = this;
-    history.replaceState('movePage', null, location.pathname);
+    history.replaceState('init', null, location.pathname);
     $(this.classNameLink).on('click.pjax', function(event) {
-      _this.onClickPjax(event, $(this))
+      _this.click(event, $(this))
     })
     $(window).on('popstate.pjax', function(event) {
-      if (event.state == 'movePage') {
-        _this.loadContents(location.pathname);
+      switch (event.state) {
+        case 'movePage':
+          _this.load(location.pathname);
+          break;
+        case 'init':
+          _this.load(location.pathname);
+          break;
+        default:
       }
     });
   }
-  loadContents(href) {
-    const _this = this;
+  load(href) {
     $.ajax({
       url: href,
       type: 'GET',
@@ -30,28 +36,47 @@ export default class Pjax {
     })
     .done((data) => {
       console.log("success");
-      this.htmlLoaded = null;
-      this.$contentsLoaded = null;
-      this.htmlLoaded = $.parseHTML(data);
-      this.$contentsLoaded = $('<div/>').append(this.htmlLoaded).find(this.classNameContents);
-      this.$contents.empty();
-      this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
-        _this.onClickPjax(event, $(this))
-      });
-      this.$contents.html(this.$contentsLoaded);
+      this.success(data);
     })
-    .fail(function() {
+    .fail(() => {
       console.log("error");
     })
-    .always(function() {
+    .always(() => {
       console.log("complete");
     });
   }
-  onClickPjax(event, $this) {
+  click(event, $this) {
     event.preventDefault();
     const href = $this.attr('href');
     if (href == location.pathname) return;
-    this.loadContents(href);
-    history.pushState('movePage', null, href);
+    this.close(href);
+  }
+  success(data) {
+    const _this = this;
+    this.htmlLoaded = null;
+    this.$contentsLoaded = null;
+    this.htmlLoaded = $.parseHTML(data);
+    this.$contentsLoaded = $('<div/>').append(this.htmlLoaded).find(this.classNameWrap);
+    this.$wrap.empty();
+    this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
+      _this.click(event, $(this))
+    });
+    this.$wrap.html(this.$contentsLoaded);
+    this.open();
+  }
+  close(href) {
+    this.$overlay.addClass('is-spread');
+    this.$overlay.on('animationend.pjaxSpread', () => {
+      this.load(href);
+      history.pushState('movePage', null, href);
+      this.$overlay.off('animationend.pjaxSpread');
+    })
+  }
+  open() {
+    this.$overlay.addClass('is-shut');
+    this.$overlay.on('animationend.pjaxShut', () => {
+      this.$overlay.removeClass('is-spread is-shut');
+      this.$overlay.off('animationend.pjaxShut');
+    })
   }
 }
