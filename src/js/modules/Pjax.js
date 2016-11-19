@@ -51,6 +51,7 @@ export default class Pjax {
     });
   }
   click(event, $this) {
+    // pjax遷移させたい要素にイベントを付与するメソッド。
     event.preventDefault();
     const href = $this.attr('href');
     if (href == location.pathname) return;
@@ -61,16 +62,21 @@ export default class Pjax {
   }
   success(data) {
     const _this = this;
+    // 既に読み込んでいるページの内容を一旦空にする。
+    // わざわざnullにしているのは、GCが走ればいいなぁ程度で…実際走ってくれるかは不明。
     this.$head = null;
     this.$body = null;
     this.$contentsLoaded = null;
+    this.$wrap.empty();
+    // Ajaxで取得したデータをheadとbodyに分け、jQueryオブジェクトに変換する。
     this.$head = $($.parseHTML(data.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0]));
     this.$body = $($.parseHTML(data.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
     this.$contentsLoaded = this.$body.find(this.classNameWrap);
-    this.$wrap.empty();
+    // body要素内のpjaxリンクにイベントを付与。
     this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
       _this.click(event, $(this))
     });
+    // メタデータ更新。
     document.title = this.$head.filter('title').last().text();
     this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
     this.$meta.keys.attr('content', this.$head.filter('meta[name=keywords]')[0].content);
@@ -79,10 +85,13 @@ export default class Pjax {
     this.$meta.ogUrl.attr('content', location.hostname + location.pathname);
     this.$meta.twTitle.attr('content', document.title);
     this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
+    // コンテンツ更新。
     this.$wrap.html(this.$contentsLoaded);
+    // 表示。
     this.open();
   }
   close(callback) {
+    // pjax遷移の開始時に演出をつけたい場合はここで処理する。
     this.$overlay.addClass('is-spread');
     this.$overlay.on('animationend.pjaxSpread', () => {
       this.$overlay.off('animationend.pjaxSpread');
@@ -90,6 +99,7 @@ export default class Pjax {
     })
   }
   open() {
+    // pjax遷移の終了時に演出をつけたい場合はここで処理する。
     this.$overlay.addClass('is-shut');
     this.$overlay.on('animationend.pjaxShut', () => {
       this.$overlay.removeClass('is-spread is-shut');
