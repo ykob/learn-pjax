@@ -1,3 +1,5 @@
+import Initialize from './Initialize.js'
+
 export default class Pjax {
   constructor() {
     this.classNameLink = 'a.js-pjax';
@@ -17,6 +19,7 @@ export default class Pjax {
     }
     this.$overlay = $('.l-pjax-overlay');
     this.anchor = document.createElement("a")
+    this.pageInit = new Initialize();
 
     this.init();
   }
@@ -77,19 +80,22 @@ export default class Pjax {
     this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
       _this.click(event, $(this))
     });
-    // メタデータ更新。
-    document.title = this.$head.filter('title').last().text();
-    this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
-    this.$meta.keys.attr('content', this.$head.filter('meta[name=keywords]')[0].content);
-    this.$meta.ogTitle.attr('content', document.title);
-    this.$meta.ogDesc.attr('content', this.$meta.desc.attr('content'));
-    this.$meta.ogUrl.attr('content', `${location.protocol}//${location.host}${location.pathname}`);
-    this.$meta.twTitle.attr('content', document.title);
-    this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
-    // コンテンツ更新。
-    this.$wrap.html(this.$contentsLoaded);
-    // 新しく生成されたページを表示。
-    this.open();
+
+    this.pageInit.run(() => {
+      // メタデータ更新。
+      document.title = this.$head.filter('title').last().text();
+      this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
+      this.$meta.keys.attr('content', this.$head.filter('meta[name=keywords]')[0].content);
+      this.$meta.ogTitle.attr('content', document.title);
+      this.$meta.ogDesc.attr('content', this.$meta.desc.attr('content'));
+      this.$meta.ogUrl.attr('content', `${location.protocol}//${location.host}${location.pathname}`);
+      this.$meta.twTitle.attr('content', document.title);
+      this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
+      // コンテンツ更新。
+      this.$wrap.html(this.$contentsLoaded);
+      // 新しく生成されたページを表示。
+      this.open();
+    });
   }
   close(callback) {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。

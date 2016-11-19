@@ -1,5 +1,10 @@
-// import Preloader from '../modules/preloader.js';
+export default class InitIndex {
+  constructor() {
+    this.data = [
 
-export default function() {
-
+    ]
+  }
+  run() {
+    console.log('init index');
+  }
 };
