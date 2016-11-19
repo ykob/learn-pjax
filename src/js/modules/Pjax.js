@@ -18,7 +18,7 @@ export default class Pjax {
       twDesc: $('meta[name="twitter:description"]'),
     }
     this.$overlay = $('.l-pjax-overlay');
-    this.anchor = document.createElement("a")
+    this.anchor = document.createElement("a");
     this.pageInit = new Initialize();
     this.isAnimate = false;
 
@@ -87,6 +87,17 @@ export default class Pjax {
       this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
       // コンテンツ更新。
       this.$wrap.html(this.$contentsLoaded.html());
+      // 再表示時のスクロールY値を設定。
+      $('body').css({
+        position: 'static',
+        marginTop: 0
+      });
+      if (location.hash) {
+        console.log($(location.hash).offset().top);
+        $('html, body').animate({
+          scrollTop: `${$(location.hash).offset().top}px`,
+        }, 0)
+      }
       // body要素内のpjaxリンクにイベントを付与。
       this.$wrap.find(this.classNameLink).on('click.pjax', function(event) {
         _this.click(event, $(this))
@@ -99,6 +110,11 @@ export default class Pjax {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。
     if (this.isAnimate) return;
     this.isAnimate = true;
+    console.log($(window).scrollTop())
+    $('body').css({
+      position: 'fixed',
+      marginTop: $(window).scrollTop() * -1
+    });
     this.$overlay.addClass('is-spread');
     this.$overlay.on('animationend.pjaxSpread', () => {
       this.$overlay.off('animationend.pjaxSpread');

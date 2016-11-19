@@ -2,10 +2,14 @@ html {
   height: 100%;
 }
 body {
+  width: 100%;
   min-height: 100%;
   overflow-y: scroll;
   color: #333;
   font-family: $font-jp;
+}
+img {
+  width: 100%;
 }
 ::selection {
   color: #fff;
