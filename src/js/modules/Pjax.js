@@ -20,6 +20,7 @@ export default class Pjax {
     this.$overlay = $('.l-pjax-overlay');
     this.anchor = document.createElement("a")
     this.pageInit = new Initialize();
+    this.isAnimate = false;
 
     this.init();
   }
@@ -100,6 +101,8 @@ export default class Pjax {
   }
   close(callback) {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。
+    if (this.isAnimate) return;
+    this.isAnimate = true;
     this.$overlay.addClass('is-spread');
     this.$overlay.on('animationend.pjaxSpread', () => {
       this.$overlay.off('animationend.pjaxSpread');
@@ -112,6 +115,7 @@ export default class Pjax {
     this.$overlay.on('animationend.pjaxShut', () => {
       this.$overlay.removeClass('is-spread is-shut');
       this.$overlay.off('animationend.pjaxShut');
+      this.isAnimate = false;
     })
   }
 }
