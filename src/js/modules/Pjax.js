@@ -45,13 +45,10 @@ export default class Pjax {
       cache: true
     })
     .done((data) => {
-      console.log("success");
     })
     .fail(() => {
-      console.log("error");
     })
     .always((data) => {
-      console.log("complete");
       this.complete(data);
     });
   }
@@ -68,7 +65,7 @@ export default class Pjax {
   complete(data) {
     const _this = this;
     // 既に読み込んでいるページの内容を一旦空にする。
-    // わざわざnullにしているのは、GCが走ればいいなぁ程度で…実際走ってくれるかは不明。
+    // わざわざnullにしているのは、GCが走ってほしいという程度のこと。実際走ってくれるかは不明。
     this.$head = null;
     this.$body = null;
     this.$contentsLoaded = null;
@@ -77,12 +74,7 @@ export default class Pjax {
     this.$head = $($.parseHTML(data.match(/<head[^>]*>([\s\S.]*)<\/head>/i)[0]));
     this.$body = $($.parseHTML(data.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
     this.$contentsLoaded = this.$body.find(this.classNameWrap);
-    // body要素内のpjaxリンクにイベントを付与。
-    this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
-      console.log('aaa');
-      _this.click(event, $(this))
-    });
-
+    // ページごとの初期化処理を開始。
     this.pageInit.run(() => {
       // メタデータ更新。
       document.title = this.$head.filter('title').last().text();
@@ -95,6 +87,10 @@ export default class Pjax {
       this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
       // コンテンツ更新。
       this.$wrap.html(this.$contentsLoaded.html());
+      // body要素内のpjaxリンクにイベントを付与。
+      this.$wrap.find(this.classNameLink).on('click.pjax', function(event) {
+        _this.click(event, $(this))
+      });
       // 新しく生成されたページを表示。
       this.open();
     });
