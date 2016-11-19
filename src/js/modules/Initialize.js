@@ -16,7 +16,7 @@ export default class Initialize {
     this.current = null;
     this.preloader = new Preloader();
   }
-  run(callback) {
+  run(callback1, callback2) {
     const { pathname } = window.location;
     switch (pathname.replace('index.html', '')) {
       case '/':
@@ -36,10 +36,11 @@ export default class Initialize {
     this.preloader.start(
       this.current.data,
       () => {
+        if(callback1) callback1();
       },
       () => {
         this.current.run();
-        callback();
+        if(callback2) callback2();
       }
     )
   }

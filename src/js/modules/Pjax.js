@@ -75,7 +75,7 @@ export default class Pjax {
     this.$body = $($.parseHTML(data.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
     this.$contentsLoaded = this.$body.find(this.classNameWrap);
     // ページごとの初期化処理を開始。
-    this.pageInit.run(() => {
+    this.pageInit.run(null, () => {
       // メタデータ更新。
       document.title = this.$head.filter('title').last().text();
       this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
