@@ -16,6 +16,7 @@ export default class Pjax {
       twDesc: $('meta[name="twitter:description"]'),
     }
     this.$overlay = $('.l-pjax-overlay');
+    this.anchor = document.createElement("a")
 
     this.init();
   }
@@ -39,28 +40,28 @@ export default class Pjax {
       dataType: 'html',
       cache: true
     })
-    .done((data) => {
+    .done(() => {
       console.log("success");
-      this.success(data);
     })
     .fail(() => {
       console.log("error");
     })
-    .always(() => {
+    .always((data) => {
       console.log("complete");
+      this.complete(data);
     });
   }
   click(event, $this) {
     // pjax遷移させたい要素にイベントを付与するメソッド。
     event.preventDefault();
-    const href = $this.attr('href');
-    if (href == location.pathname) return;
+    this.anchor.href = $this.attr('href');
+    if (this.anchor.href == `${location.protocol}//${location.host}${location.pathname}`) return;
     this.close(() => {
-      this.load(href);
-      history.pushState('movePage', null, href);
+      this.load(this.anchor.href);
+      history.pushState('movePage', null, this.anchor.href);
     });
   }
-  success(data) {
+  complete(data) {
     const _this = this;
     // 既に読み込んでいるページの内容を一旦空にする。
     // わざわざnullにしているのは、GCが走ればいいなぁ程度で…実際走ってくれるかは不明。
@@ -82,12 +83,12 @@ export default class Pjax {
     this.$meta.keys.attr('content', this.$head.filter('meta[name=keywords]')[0].content);
     this.$meta.ogTitle.attr('content', document.title);
     this.$meta.ogDesc.attr('content', this.$meta.desc.attr('content'));
-    this.$meta.ogUrl.attr('content', location.hostname + location.pathname);
+    this.$meta.ogUrl.attr('content', `${location.protocol}//${location.host}${location.pathname}`);
     this.$meta.twTitle.attr('content', document.title);
     this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
     // コンテンツ更新。
     this.$wrap.html(this.$contentsLoaded);
-    // 表示。
+    // 新しく生成されたページを表示。
     this.open();
   }
   close(callback) {
