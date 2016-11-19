@@ -43,7 +43,7 @@ export default class Pjax {
       dataType: 'html',
       cache: true
     })
-    .done(() => {
+    .done((data) => {
       console.log("success");
     })
     .fail(() => {
@@ -78,6 +78,7 @@ export default class Pjax {
     this.$contentsLoaded = this.$body.find(this.classNameWrap);
     // body要素内のpjaxリンクにイベントを付与。
     this.$contentsLoaded.find(this.classNameLink).on('click.pjax', function(event) {
+      console.log('aaa');
       _this.click(event, $(this))
     });
 
@@ -92,7 +93,7 @@ export default class Pjax {
       this.$meta.twTitle.attr('content', document.title);
       this.$meta.twDesc.attr('content', this.$meta.desc.attr('content'));
       // コンテンツ更新。
-      this.$wrap.html(this.$contentsLoaded);
+      this.$wrap.html(this.$contentsLoaded.html());
       // 新しく生成されたページを表示。
       this.open();
     });

@@ -13,6 +13,7 @@ export default class Preloader {
     const reg = /(.*)(?:\.([^.]+$))/;
     if (data.length > 0) {
       for (var i = 0; i < this.data.length; i++) {
+
         const data = this.data[i];
         switch (data.match(reg)[2]) {
           case 'png':
@@ -45,6 +46,7 @@ export default class Preloader {
     if (this.callbackLoadedData) this.callbackLoadedData();
     if (this.countLoaded >= this.data.length) {
       this.loadedDataAll();
+      this.countLoaded = 0;
     }
   }
   loadedDataAll() {
