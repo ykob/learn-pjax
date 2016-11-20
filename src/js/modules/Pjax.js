@@ -93,7 +93,6 @@ export default class Pjax {
         marginTop: 0
       });
       if (location.hash) {
-        console.log($(location.hash).offset().top);
         $('html, body').animate({
           scrollTop: `${$(location.hash).offset().top}px`,
         }, 0)

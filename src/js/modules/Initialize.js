@@ -19,29 +19,34 @@ export default class Initialize {
   run(callback1, callback2) {
     const { pathname } = window.location;
     switch (pathname.replace('index.html', '')) {
-      case '/':
+      case '/learn-pjax/':
         this.current = this.init.index;
         break;
-      case '/page1.html':
+      case '/learn-pjax/page1.html':
         this.current = this.init.page1;
         break;
-      case '/page2.html':
+      case '/learn-pjax/page2.html':
         this.current = this.init.page2;
         break;
-      case '/page3.html':
+      case '/learn-pjax/page3.html':
         this.current = this.init.page3;
         break;
       default:
+        this.current = null;
     }
-    this.preloader.start(
-      this.current.data,
-      () => {
-        if(callback1) callback1();
-      },
-      () => {
-        this.current.run();
-        if(callback2) callback2();
-      }
-    )
+    if (this.current) {
+      this.preloader.start(
+        this.current.data,
+        () => {
+          if(callback1) callback1();
+        },
+        () => {
+          this.current.run();
+          if(callback2) callback2();
+        }
+      )
+    } else {
+      if(callback2) callback2();
+    }
   }
 }

@@ -1,10 +1,10 @@
 export default class InitIndex {
   constructor() {
     this.data = [
-      './img/image00.jpg',
-      './img/image01.jpg',
-      './img/image02.jpg',
-      './img/image03.jpg',
+      '/learn-pjax/img/image00.jpg',
+      '/learn-pjax/img/image01.jpg',
+      '/learn-pjax/img/image02.jpg',
+      '/learn-pjax/img/image03.jpg',
     ]
   }
   run() {

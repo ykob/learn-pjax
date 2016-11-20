@@ -2,7 +2,7 @@
 // 対象パスやオプションを指定
 
 const DIR = module.exports.DIR =  {
-  PATH: '',
+  PATH: '/learn-pjax',
   SRC: 'src',
   DEST: 'dst',
   BUILD: 'docs'
@@ -31,7 +31,7 @@ module.exports.serve = {
       baseDir: DIR.BUILD,
       index: 'index.html',
       routes: {
-        [DIR.PATH]: `${DIR.BUILD}${DIR.PATH}/`
+        [DIR.PATH]: `${DIR.BUILD}/`
       }
     }
   }
@@ -95,7 +95,7 @@ module.exports.replace = {
     src: [
       `${DIR.DEST}${DIR.PATH}/**/*.html`
     ],
-    dest: `${DIR.BUILD}${DIR.PATH}`,
+    dest: `${DIR.BUILD}`,
     path: `${DIR.PATH}`
   }
 };
@@ -121,7 +121,7 @@ module.exports.sprite = {
 
 module.exports.minifyCss = {
   src: `${DIR.DEST}${DIR.PATH}/css/main.css`,
-  dest: `${DIR.BUILD}${DIR.PATH}/css`
+  dest: `${DIR.BUILD}/css`
 };
 
 module.exports.uglify = {
@@ -129,7 +129,7 @@ module.exports.uglify = {
     `./${DIR.DEST}${DIR.PATH}/js/vendor.js`,
     `./${DIR.DEST}${DIR.PATH}/js/main.js`,
   ],
-  dest: `${DIR.BUILD}${DIR.PATH}/js`,
+  dest: `${DIR.BUILD}/js`,
   opts: {
     preserveComments: 'some'
   }
@@ -151,7 +151,7 @@ module.exports.copy = {
       `${DIR.DEST}${DIR.PATH}/img/**/*.ico`,
       `${DIR.DEST}${DIR.PATH}/font/**/*.*`,
     ],
-    dest: `${DIR.BUILD}${DIR.PATH}`,
+    dest: `${DIR.BUILD}`,
     opts: {
       base: `${DIR.DEST}${DIR.PATH}`
     }
@@ -162,7 +162,7 @@ module.exports.imagemin = {
   src: [
     `${DIR.DEST}${DIR.PATH}/**/*.{jpg,jpeg,png,gif,svg}`
   ],
-  dest: `${DIR.BUILD}${DIR.PATH}/img`
+  dest: `${DIR.BUILD}/img`
 };
 
 module.exports.clean = {
@@ -174,6 +174,6 @@ module.exports.clean = {
     ]
   },
   build: {
-    path: [`${DIR.BUILD}${DIR.PATH}`]
+    path: [`${DIR.BUILD}`]
   }
 };
