@@ -18,7 +18,7 @@ module.exports.serve = {
       baseDir: DIR.DEST,
       index: 'index.html',
       routes: {
-        [DIR.PATH]: `${DIR.DEST}${DIR.PATH}/`
+        [DIR.PATH]: `${DIR.DEST}/`
       }
     }
   },
@@ -31,7 +31,7 @@ module.exports.serve = {
       baseDir: DIR.BUILD,
       index: 'index.html',
       routes: {
-        [DIR.PATH]: `${DIR.BUILD}/`
+        [DIR.PATH]: `${DIR.BUILD}${DIR.PATH}/`
       }
     }
   }
@@ -51,7 +51,7 @@ module.exports.scripts = {
       'envify'
     ]
   },
-  dest: `${DIR.DEST}${DIR.PATH}/js`
+  dest: `${DIR.DEST}/js`
 };
 
 module.exports.vendorScripts = {
@@ -59,7 +59,7 @@ module.exports.vendorScripts = {
     `./${DIR.SRC}/js/vendor/jquery.js`,
   ],
   concat: 'vendor.js',
-  dest: `./${DIR.DEST}${DIR.PATH}/js/`
+  dest: `./${DIR.DEST}/js/`
 };
 
 module.exports.pug = {
@@ -68,7 +68,7 @@ module.exports.pug = {
     `!${DIR.SRC}/**/_**/*.pug`,
     `!${DIR.SRC}/**/_*.pug`
   ],
-  dest: `${DIR.DEST}${DIR.PATH}`,
+  dest: `${DIR.DEST}`,
   json: `${DIR.SRC}/data.json`,
   opts: {
     pretty: true
@@ -81,7 +81,7 @@ module.exports.sass = {
     `!${DIR.SRC}/**/_**/*.{sass,scss}`,
     `!${DIR.SRC}/**/_*.{sass,scss}`
   ],
-  dest: `${DIR.DEST}${DIR.PATH}/css`,
+  dest: `${DIR.DEST}/css`,
   browsers: [
     'last 2 versions',
     'ie >= 9',
@@ -93,7 +93,7 @@ module.exports.sass = {
 module.exports.replace = {
   html: {
     src: [
-      `${DIR.DEST}${DIR.PATH}/**/*.html`
+      `${DIR.DEST}/**/*.html`
     ],
     dest: `${DIR.BUILD}`,
     path: `${DIR.PATH}`
@@ -105,7 +105,7 @@ module.exports.sprite = {
     `${DIR.SRC}/img/sprite/**/*.png`
   ],
   dest: {
-    img: `${DIR.DEST}${DIR.PATH}/img/common`,
+    img: `${DIR.DEST}/img/common`,
     css: `${DIR.SRC}/css/foundation`
   },
   opts: {
@@ -120,14 +120,14 @@ module.exports.sprite = {
 };
 
 module.exports.minifyCss = {
-  src: `${DIR.DEST}${DIR.PATH}/css/main.css`,
+  src: `${DIR.DEST}/css/main.css`,
   dest: `${DIR.BUILD}/css`
 };
 
 module.exports.uglify = {
   src: [
-    `./${DIR.DEST}${DIR.PATH}/js/vendor.js`,
-    `./${DIR.DEST}${DIR.PATH}/js/main.js`,
+    `./${DIR.DEST}/js/vendor.js`,
+    `./${DIR.DEST}/js/main.js`,
   ],
   dest: `${DIR.BUILD}/js`,
   opts: {
@@ -141,26 +141,26 @@ module.exports.copy = {
       `${DIR.SRC}/img/**/*.*`,
       `${DIR.SRC}/font/**/*.*`,
     ],
-    dest: `${DIR.DEST}${DIR.PATH}`,
+    dest: `${DIR.DEST}`,
     opts: {
       base: `${DIR.SRC}`
     }
   },
   build: {
     src: [
-      `${DIR.DEST}${DIR.PATH}/img/**/*.ico`,
-      `${DIR.DEST}${DIR.PATH}/font/**/*.*`,
+      `${DIR.DEST}/img/**/*.ico`,
+      `${DIR.DEST}/font/**/*.*`,
     ],
     dest: `${DIR.BUILD}`,
     opts: {
-      base: `${DIR.DEST}${DIR.PATH}`
+      base: `${DIR.DEST}`
     }
   }
 };
 
 module.exports.imagemin = {
   src: [
-    `${DIR.DEST}${DIR.PATH}/**/*.{jpg,jpeg,png,gif,svg}`
+    `${DIR.DEST}/**/*.{jpg,jpeg,png,gif,svg}`
   ],
   dest: `${DIR.BUILD}/img`
 };
@@ -168,9 +168,9 @@ module.exports.imagemin = {
 module.exports.clean = {
   dest: {
     path: [
-      `${DIR.DEST}${DIR.PATH}/**/*.html`,
-      `${DIR.DEST}${DIR.PATH}/css/`,
-      `${DIR.DEST}${DIR.PATH}/js/`
+      `${DIR.DEST}/**/*.html`,
+      `${DIR.DEST}/css/`,
+      `${DIR.DEST}/js/`
     ]
   },
   build: {

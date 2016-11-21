@@ -17,7 +17,7 @@ export default class Pjax {
       twTitle: $('meta[name="witter:title"]'),
       twDesc: $('meta[name="twitter:description"]'),
     }
-    this.$overlay = $('.l-pjax-overlay');
+    this.$overlay = $('.c-pjax-overlay');
     this.anchor = document.createElement("a");
     this.pageInit = new Initialize();
     this.isAnimate = false;
@@ -36,6 +36,9 @@ export default class Pjax {
       });
     });
     history.replaceState('movePage', null, location.pathname);
+    this.pageInit.run(null, () => {
+      $('.c-preload-overlay').addClass('is-shut');
+    });
   }
   load(href) {
     $.ajax({
@@ -109,7 +112,6 @@ export default class Pjax {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。
     if (this.isAnimate) return;
     this.isAnimate = true;
-    console.log($(window).scrollTop())
     $('body').css({
       position: 'fixed',
       marginTop: $(window).scrollTop() * -1
