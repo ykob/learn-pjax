@@ -10,4 +10,10 @@ export default class InitIndex {
   run() {
     console.log('init index');
   }
+  on() {
+
+  }
+  off() {
+
+  }
 }

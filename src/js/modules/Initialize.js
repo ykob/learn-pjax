@@ -17,6 +17,7 @@ export default class Initialize {
     this.preloader = new Preloader();
   }
   run(callback1, callback2) {
+    if (this.current) this.current.off();
     const { pathname } = window.location;
     switch (pathname.replace('index.html', '')) {
       case '/learn-pjax/':
@@ -41,8 +42,9 @@ export default class Initialize {
           if(callback1) callback1();
         },
         () => {
-          this.current.run();
           if(callback2) callback2();
+          this.current.run();
+          this.current.on();
         }
       )
     } else {

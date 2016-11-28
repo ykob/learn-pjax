@@ -10,4 +10,10 @@ export default class InitPage1 {
   run() {
     console.log('init page1');
   }
+  on() {
+
+  }
+  off() {
+
+  }
 };
