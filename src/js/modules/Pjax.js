@@ -27,12 +27,12 @@ export default class Pjax {
   init() {
     const _this = this;
     $(this.classNameLink).on('click.pjax', function(event) {
-      _this.click(event, $(this))
+      _this.transition(event, $(this))
     })
     $(window).on('popstate.pjax', function(event) {
       if (event.originalEvent.state != 'movePage') return;
-      _this.close(() => {
-        _this.load(location.pathname);
+      _this.closePage(() => {
+        _this.ajax(location.pathname);
       });
     });
     history.replaceState('movePage', null, location.pathname);
@@ -40,7 +40,7 @@ export default class Pjax {
       $('.c-preload-overlay').addClass('is-shut');
     });
   }
-  load(href) {
+  ajax(href) {
     $.ajax({
       url: href,
       type: 'GET',
@@ -52,20 +52,23 @@ export default class Pjax {
     .fail(() => {
     })
     .always((data) => {
-      this.complete(data);
+      this.completeTransition(data);
     });
   }
-  click(event, $this) {
+  //
+  // ページ遷移関連のメソッド
+  // ----------------------------------------
+  transition(event, $this) {
     // pjax遷移させたい要素にイベントを付与するメソッド。
     event.preventDefault();
     this.anchor.href = $this.attr('href');
     if (this.anchor.href == `${location.protocol}//${location.host}${location.pathname}`) return;
-    this.close(() => {
-      this.load(this.anchor.href);
+    this.closePage(() => {
+      this.ajax(this.anchor.href);
       history.pushState('movePage', null, this.anchor.href);
     });
   }
-  complete(data) {
+  completeTransition(data) {
     const _this = this;
     // 既に読み込んでいるページの内容を一旦空にする。
     // わざわざnullにしているのは、GCが走ってほしいという程度のこと。実際走ってくれるかは不明。
@@ -102,13 +105,13 @@ export default class Pjax {
       }
       // body要素内のpjaxリンクにイベントを付与。
       this.$wrap.find(this.classNameLink).on('click.pjax', function(event) {
-        _this.click(event, $(this))
+        _this.transition(event, $(this))
       });
       // 新しく生成されたページを表示。
-      this.open();
+      this.openPage();
     });
   }
-  close(callback) {
+  closePage(callback) {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。
     if (this.isAnimate) return;
     this.isAnimate = true;
@@ -122,7 +125,7 @@ export default class Pjax {
       callback();
     })
   }
-  open() {
+  openPage() {
     // pjax遷移の終了時に演出をつけたい場合はここで処理する。
     this.$overlay.addClass('is-shut');
     this.$overlay.on('animationend.pjaxShut', () => {
