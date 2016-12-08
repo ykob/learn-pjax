@@ -25,19 +25,20 @@ export default class Pjax {
     this.init();
   }
   init() {
+    this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`;
+    this.on();
+    this.pageInit.run(null, () => {
+      $('.c-preload-overlay').addClass('is-shut');
+    });
+    history.replaceState('movePage', null, location.pathname);
+  }
+  on() {
     const _this = this;
     $(this.classNameLink).on('click.pjax', function(event) {
       _this.transition(event, $(this))
     })
-    $(window).on('popstate.pjax', function(event) {
-      if (event.originalEvent.state != 'movePage') return;
-      _this.closePage(() => {
-        _this.ajax(location.pathname);
-      });
-    });
-    history.replaceState('movePage', null, location.pathname);
-    this.pageInit.run(null, () => {
-      $('.c-preload-overlay').addClass('is-shut');
+    $(window).on('popstate.pjax', (event) => {
+      this.popstate(event);
     });
   }
   ajax(href) {
@@ -52,7 +53,16 @@ export default class Pjax {
     .fail(() => {
     })
     .always((data) => {
+      this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`
       this.completeTransition(data);
+    });
+  }
+  popstate(event) {
+    if (event.originalEvent.state != 'movePage') return;
+    this.closePage(() => {
+      this.ajax(location.pathname, (data) => {
+        this.completeTransition(data);
+      });
     });
   }
   //
@@ -132,6 +142,15 @@ export default class Pjax {
       this.$overlay.removeClass('is-spread is-shut');
       this.$overlay.off('animationend.pjaxShut');
       this.isAnimate = false;
+      // popstateによって演出終わりにlocationと表示にズレが生じた場合、再度遷移処理を走らせる。
+      if (this.anchor.href != `${location.protocol}//${location.host}${location.pathname}`) {
+        this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`
+        this.closePage(() => {
+          this.ajax(this.anchor.href, (data) => {
+            this.completeTransition(data);
+          });
+        });
+      }
     })
   }
 }
