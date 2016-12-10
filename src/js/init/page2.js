@@ -7,13 +7,13 @@ export default class InitPage2 {
       '/learn-pjax/img/image03.jpg',
     ]
   }
-  run() {
+  startBeforePageOpen() {
     console.log('init page2');
   }
-  on() {
+  startAfterPageOpen() {
 
   }
-  off() {
+  breakAway() {
 
   }
 };

@@ -1,7 +1,13 @@
-import Initialize from './Initialize.js'
+import InitIndex from '../init/index.js'
+import InitPage1 from '../init/page1.js'
+import InitPage2 from '../init/page2.js'
+import InitPage3 from '../init/page3.js'
+
+import Preloader from './Preloader.js'
 
 export default class Pjax {
   constructor() {
+    // Pjax遷移関連のプロパティ
     this.classNameLink = 'a.js-pjax';
     this.classNameWrap = '.l-contents';
     this.$wrap = $(this.classNameWrap);
@@ -19,15 +25,29 @@ export default class Pjax {
     }
     this.$overlay = $('.c-pjax-overlay');
     this.anchor = document.createElement("a");
-    this.pageInit = new Initialize();
+
+    // ページ初期化関連のプロパティ
+    this.initObj = {
+      index: new InitIndex(),
+      page1: new InitPage1(),
+      page2: new InitPage2(),
+      page3: new InitPage3(),
+    };
+    this.currentInitObj = null;
+    this.preloader = new Preloader();
+
+    // 各種フラグ
     this.isAnimate = false;
 
     this.init();
   }
+  //
+  // 基礎的なメソッド
+  // ----------------------------------------
   init() {
     this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`;
     this.on();
-    this.pageInit.run(null, () => {
+    this.initPage(null, () => {
       $('.c-preload-overlay').addClass('is-shut');
     });
     history.replaceState('movePage', null, location.pathname);
@@ -66,6 +86,42 @@ export default class Pjax {
     });
   }
   //
+  // ページごとの初期化を行うメソッド
+  // ----------------------------------------
+  initPage(callback1, callback2) {
+    const { pathname } = window.location;
+    switch (pathname.replace('index.html', '')) {
+      case '/learn-pjax/':
+        this.currentInitObj = this.initObj.index;
+        break;
+      case '/learn-pjax/page1.html':
+        this.currentInitObj = this.initObj.page1;
+        break;
+      case '/learn-pjax/page2.html':
+        this.currentInitObj = this.initObj.page2;
+        break;
+      case '/learn-pjax/page3.html':
+        this.currentInitObj = this.initObj.page3;
+        break;
+      default:
+        this.currentInitObj = null;
+    }
+    if (this.currentInitObj) {
+      this.preloader.start(
+        this.currentInitObj.data,
+        () => {
+          if(callback1) callback1();
+        },
+        () => {
+          if(callback2) callback2();
+          this.currentInitObj.startBeforePageOpen();
+        }
+      )
+    } else {
+      if(callback2) callback2();
+    }
+  }
+  //
   // ページ遷移関連のメソッド
   // ----------------------------------------
   transition(event, $this) {
@@ -91,7 +147,7 @@ export default class Pjax {
     this.$body = $($.parseHTML(data.match(/<body[^>]*>([\s\S.]*)<\/body>/i)[0]));
     this.$contentsLoaded = this.$body.find(this.classNameWrap);
     // ページごとの初期化処理を開始。
-    this.pageInit.run(null, () => {
+    this.initPage(null, () => {
       // メタデータ更新。
       document.title = this.$head.filter('title').last().text();
       this.$meta.desc.attr('content', this.$head.filter('meta[name=description]')[0].content);
@@ -125,6 +181,7 @@ export default class Pjax {
     // pjax遷移の開始時に演出をつけたい場合はここで処理する。
     if (this.isAnimate) return;
     this.isAnimate = true;
+    this.currentInitObj.breakAway();
     $('body').css({
       position: 'fixed',
       marginTop: $(window).scrollTop() * -1
@@ -142,6 +199,7 @@ export default class Pjax {
       this.$overlay.removeClass('is-spread is-shut');
       this.$overlay.off('animationend.pjaxShut');
       this.isAnimate = false;
+      this.currentInitObj.startAfterPageOpen();
       // popstateによって演出終わりにlocationと表示にズレが生じた場合、再度遷移処理を走らせる。
       if (this.anchor.href != `${location.protocol}//${location.host}${location.pathname}`) {
         this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`

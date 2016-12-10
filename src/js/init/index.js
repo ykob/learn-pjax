@@ -7,13 +7,13 @@ export default class InitIndex {
       '/learn-pjax/img/image03.jpg',
     ]
   }
-  run() {
+  startBeforePageOpen() {
     console.log('init index');
   }
-  on() {
+  startAfterPageOpen() {
 
   }
-  off() {
+  breakAway() {
 
   }
 }
