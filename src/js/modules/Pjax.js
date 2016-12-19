@@ -61,7 +61,7 @@ export default class Pjax {
       this.popstate(event);
     });
   }
-  ajax(href) {
+  ajax(href, callback) {
     $.ajax({
       url: href,
       type: 'GET',
@@ -73,8 +73,8 @@ export default class Pjax {
     .fail(() => {
     })
     .always((data) => {
-      this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`
-      this.completeTransition(data);
+      this.anchor.href = `${location.protocol}//${location.host}${location.pathname}`;
+      if (callback) callback(data);
     });
   }
   popstate(event) {
@@ -130,7 +130,9 @@ export default class Pjax {
     if ($this.attr('href') == `${location.pathname.replace('index.html', '')}`) return;
     history.pushState('movePage', null, this.anchor.href);
     this.closePage(() => {
-      this.ajax($this.attr('href'));
+      this.ajax($this.attr('href'), (data) => {
+        this.completeTransition(data);
+      });
     });
   }
   completeTransition(data) {
