@@ -127,11 +127,10 @@ export default class Pjax {
   transition(event, $this) {
     // pjax遷移させたい要素にイベントを付与するメソッド。
     event.preventDefault();
-    this.anchor.href = $this.attr('href');
-    if (this.anchor.href == `${location.protocol}//${location.host}${location.pathname}`) return;
+    if ($this.attr('href') == `${location.pathname.replace('index.html', '')}`) return;
+    history.pushState('movePage', null, this.anchor.href);
     this.closePage(() => {
-      this.ajax(this.anchor.href);
-      history.pushState('movePage', null, this.anchor.href);
+      this.ajax($this.attr('href'));
     });
   }
   completeTransition(data) {
