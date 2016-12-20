@@ -137,6 +137,8 @@ export default class Pjax {
   }
   completeTransition(data) {
     const _this = this;
+    // gaへpageviewを送信。
+    if (window.ga) ga('send', 'pageview', window.location.pathname.replace(/^\/?/, '/') + window.location.search);
     // 既に読み込んでいるページの内容を一旦空にする。
     // わざわざnullにしているのは、GCが走ってほしいという程度のこと。実際走ってくれるかは不明。
     this.$head = null;
